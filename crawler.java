@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class crawler{
+
+    
     static String sendHTML(String url){
         String result = "";
         BufferedReader in = null;  // 定义一个缓冲字符输入流
@@ -40,21 +42,39 @@ public class crawler{
         String result = "";
         Pattern pattern = Pattern.compile(patternStr);  // complie first
         Matcher matcher = pattern.matcher(targetStr);  // then match
-        String rm_title = "</?\\S*?>";
+        String rm_title = "</?\\S.*?>";
         Pattern rm_pattern = Pattern.compile(rm_title);
         while (matcher.find()){  // matcher.find()是逐步进行，因此要通过循环来显示出所有结果
-            String content = matcher.group();
+            String content = matcher.group(1);
             Matcher matcher2 = rm_pattern.matcher(content);
             result += matcher2.replaceAll("") + "\n";
         }
         return result;
     }
 
+
     public static void main(String args[]){
-        String url = "http://www.runoob.com/java/java-regular-expressions.html";
+        String url = "http://www.wikicfp.com/cfp/";
         String result = sendHTML(url);
-        String patternStr = "<td>.*?<p>(.*?)</p>.*?</td>";
-        String content = ReStr(result, patternStr);
-        System.out.println(content);
+        // System.out.println(result);
+        String patternStr1 = "<td rowspan=\"2\".*?>(.*?)</td>";
+        String event = ReStr(result, patternStr1);
+        String evt[] = event.split("\n");
+        String patternStr2 = "<td align=\"left\" col.*?>(.*?)</td>";
+        String detail = ReStr(result, patternStr2);
+        String dtl[] = detail.split("\n");
+        String patternStr3 = "<td align=\"left\">([A-Z].*?)</td>";
+        String time = ReStr(result, patternStr3);
+        String tm[] = time.split("\n");
+        int i = 0;
+	    while (i < evt.length){
+		    System.out.println("Event:" + evt[i]);
+            System.out.println("Detail:" + dtl[i]);
+            System.out.println("Time:");
+            System.out.println(tm[i * 3]);
+            System.out.println(tm[i * 3 + 1]);
+            System.out.println(tm[i * 3 + 2] + "\n\n");
+		    i += 1;
+	    }
     }
 }
