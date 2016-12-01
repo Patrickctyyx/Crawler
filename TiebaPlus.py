@@ -8,11 +8,14 @@ class Tieba(object):
 
     def __init__(self):
         self.baseURL = 'http://tieba.baidu.com'
-        self.targetTieba = '/f?kw=%E5%A5%B3%E7%A5%9E'
         self.pagestr = '&ie=utf-8&pn='
-        self.page = 0
-        self.maxpage = 5
         self.allURLs = []
+
+        jsonfile = open('tieba.json', 'r')
+        setting = json.load(jsonfile)
+        self.targetTieba = setting['targetTieba']
+        self.page = setting['startpage']
+        self.maxpage = setting['maxpage']
 
     def getBSobj(self, url):
         html = urlopen(url)
