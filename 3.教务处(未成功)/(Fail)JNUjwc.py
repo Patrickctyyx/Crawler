@@ -1,6 +1,6 @@
-from http import cookiejar
-from urllib.parse import urlencode
-from urllib.request import build_opener, HTTPCookieProcessor, urlretrieve
+# 没能成功登录，问题暂时没找到，留个坑
+
+from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 import requests
 
@@ -29,20 +29,21 @@ def login():
     passwd = input(u'请手动输入密码\n>')
     captcha = input(u'请手动输入验证码\n>')
 
-    postdata = urlencode({
+    postdata = {
         values[0][0]: values[0][1],
         values[1][0]: values[1][1],
         values[2][0]: values[2][1],
         'txtYHBS': '2015053961',
         'txtYHMM': passwd,
         'txtFJM': captcha,
-        'btnLogin': '%B5%C7++++%C2%BC'
-    })
+        'btnLogin': '登    录'
+    }
     # login
-    session.post(url + 'Login.aspx', data=postdata, headers=headers)
+    rst = session.post('http://jwxt.jnu.edu.cn/Login.aspx', data=postdata, headers=headers)
 
-    succ = session.get('http://jwxt.jnu.edu.cn/IndexPage.aspx')
-    print('登陆成功！')
+    print(rst.text)
+    print(rst.status_code)  # 500
+
 
 if __name__ == '__main__':
     save_captach()
