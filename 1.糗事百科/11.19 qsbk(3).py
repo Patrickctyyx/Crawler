@@ -27,7 +27,10 @@ class QSBK(object):
             author = joke.findAll('div', {'class': 'author clearfix'})[0].findAll('h2')[0].get_text()
             text = joke.findAll('div', {'class': 'content'})[0].span.get_text()
             vote_num = joke.findAll('span', {'class': 'stats-vote'})[0].i.get_text()
-            comment_num = joke.findAll('span', {'class': 'stats-comments'})[0].i.get_text()
+            try:
+                comment_num = joke.findAll('span', {'class': 'stats-comments'})[0].i.get_text()
+            except AttributeError:
+                comment_num = 0
             otherinfo = '{} 好笑 · {} 评论'.format(vote_num, comment_num)
             full_jokes_info.append([author, text, otherinfo])
         return full_jokes_info
