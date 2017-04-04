@@ -46,10 +46,10 @@ class HomeworkIndicator:
                 cnt = len(self.driver.find_elements_by_xpath(path))
                 if cnt > hw:
                     self.hw_len[i] = cnt
-                    i += 1
                     body = '【{}】作业有新内容了！'.format(name)
                     print('已发送邮件！')
                     sendMail('作业更新提醒！', body)
+                i += 1
                 time.sleep(3)
             time.sleep(3600)
 
