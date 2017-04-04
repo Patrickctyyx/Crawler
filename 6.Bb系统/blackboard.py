@@ -1,44 +1,63 @@
-from bs4 import BeautifulSoup
-import requests
+#! /usr/bin/env python3
 
-session = requests.Session()
-headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.3'
-    '6 (KHTML, like Gecko) Chrome/54.0.2840.100 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-}
-url = 'http://study.jnu.edu.cn/'
-req = session.get(url, headers=headers)
-bsObj = BeautifulSoup(req.text, 'lxml')
+from selenium import webdriver
+import time
+import os
+from mailalert import sendMail
 
 
-def login():
-    hiddens = bsObj.findAll('input', {'type': 'hidden'})
-    values = []
-    for hidden in hiddens:
-        values.append((hidden.attrs['name'], hidden.attrs['value']))
+class HomeworkIndicator:
 
-    passwd = input(u'请手动输入密码\n>')
+    def __init__(self, urls, names):
 
-    postdata = {
-        values[0][0]: values[0][1],
-        values[1][0]: values[1][1],
-        values[2][0]: values[2][1],
-        'user_id': '2015053961',
-        'password': passwd,
-        'txtFJM': captcha,
-        'btnLogin': '登    录'
-    }
-    # login
-    rst = session.post('http://jwxt.jnu.edu.cn/Login.aspx', data=postdata, headers=headers)
+        self.driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
+        self.urls = urls
+        self.hw_len = [0 for i in self.urls]
+        self.names = names
 
-    print(rst.text)
-    print('POST' + str(rst.status_code))
+    def login(self):
 
-    test = session.get(url + 'IndexPage.aspx')
-    print(test.text)
-    print('GET' + str(test.status_code))
+        self.driver.get('http://study.jnu.edu.cn')
+
+        name = self.driver.find_element_by_name('user_id')
+        paswd = self.driver.find_element_by_name('password')
+
+        name.send_keys(os.environ.get('STUDY_NAME'))
+        paswd.send_keys(os.environ.get('STUDY_PASS'))
+
+        path = '//tbody/tr[3]/td[2]/input'
+        self.driver.find_element_by_xpath(path).click()
+
+    def start(self):
+
+        self.login()
+
+        path = '//ul/li[@class=\'clearfix read\']'
+        for url, hw, name in zip(self.urls, self.hw_len, self.names):
+            self.driver.get(url)
+            hw = len(self.driver.find_elements_by_xpath(path))
+
+        while 1:
+            for url, hw, name in zip(self.urls, self.hw_len, self.names):
+                self.driver.get(url)
+                cnt = len(self.driver.find_elements_by_xpath(path))
+                if cnt > hw:
+                    hw = cnt
+                    body = '【{}】作业有新内容了！'.format(name)
+                    print('已发送邮件！')
+                    sendMail('作业更新提醒！', body)
+                time.sleep(3)
+            time.sleep(3600)
 
 
 if __name__ == '__main__':
-    login()
+
+    urls = ['http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
+            'nt.jsp?course_id=_18789_1&content_id=_340261_1',
+            'http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
+            'nt.jsp?course_id=_18755_1&content_id=_192521_1',
+            'http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
+            'nt.jsp?course_id=_18755_1&content_id=_251306_1']
+    names = ['计组', '汇编', '汇编实验']
+    indicator = HomeworkIndicator(urls, names)
+    indicator.start()

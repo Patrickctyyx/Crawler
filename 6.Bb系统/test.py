@@ -3,6 +3,7 @@
 from selenium import webdriver
 import time
 import os
+from mailalert import sendMail
 
 driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
 driver.get('http://study.jnu.edu.cn')
@@ -21,10 +22,11 @@ homeworklen = len(driver.find_elements_by_xpath(path2))
 print(homeworklen)
 
 while 1:
-    time.sleep(3600)
+
     if len(driver.find_elements_by_xpath(path2)) > homeworklen:
-        # send a email
+        sendMail('作业更新提醒！', '计组作业有新内容了！')
         homeworklen = len(driver.find_elements_by_xpath(path2))
+    time.sleep(3600)
 
 
 
