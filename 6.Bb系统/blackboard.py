@@ -33,16 +33,20 @@ class HomeworkIndicator:
         self.login()
 
         path = '//ul/li[@class=\'clearfix read\']'
+        i = 0
         for url, hw, name in zip(self.urls, self.hw_len, self.names):
             self.driver.get(url)
-            hw = len(self.driver.find_elements_by_xpath(path))
+            self.hw_len[i] = len(self.driver.find_elements_by_xpath(path))
+            i += 1
 
         while 1:
+            i = 0
             for url, hw, name in zip(self.urls, self.hw_len, self.names):
                 self.driver.get(url)
                 cnt = len(self.driver.find_elements_by_xpath(path))
                 if cnt > hw:
-                    hw = cnt
+                    self.hw_len[i] = cnt
+                    i += 1
                     body = '【{}】作业有新内容了！'.format(name)
                     print('已发送邮件！')
                     sendMail('作业更新提醒！', body)
