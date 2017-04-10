@@ -5,7 +5,8 @@ import time
 import os
 from mailalert import sendMail
 
-driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
+driver = webdriver.PhantomJS('/home/patrick/Softwares/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+# driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
 driver.get('http://study.jnu.edu.cn')
 name = driver.find_element_by_name('user_id')
 paswd = driver.find_element_by_name('password')
