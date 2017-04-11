@@ -32,7 +32,7 @@ class HomeworkIndicator:
 
         self.login()
 
-        path = '//ul/li[@class=\'clearfix read\']//a'
+        path = '//ul/li[@class=\'clearfix read\']'
         i = 0
         for url, hw, name in zip(self.urls, self.hw_len, self.names):
             self.driver.get(url)
@@ -43,11 +43,8 @@ class HomeworkIndicator:
             i = 0
             for url, hw, name in zip(self.urls, self.hw_len, self.names):
                 self.driver.get(url)
-                items = self.driver.find_elements_by_xpath(path)
-                cnt = len(items)
+                cnt = len(self.driver.find_elements_by_xpath(path))
                 if cnt > hw:
-                    for i in range(cnt - hw):
-                        items[hw + i - 1].click()
                     self.hw_len[i] = cnt
                     body = '【{}】作业有新内容了！'.format(name)
                     print('已发送邮件！')

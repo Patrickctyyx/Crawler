@@ -5,9 +5,13 @@ import time
 import os
 from mailalert import sendMail
 
-driver = webdriver.PhantomJS('/home/patrick/Softwares/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+# PhantomJS('/home/patrick/Softwares/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
 # driver = webdriver.Chrome('/home/patrick/Softwares/chromedriver')
 driver.get('http://study.jnu.edu.cn')
+
+
+
 name = driver.find_element_by_name('user_id')
 paswd = driver.find_element_by_name('password')
 name.send_keys(os.environ.get('STUDY_NAME'))
@@ -18,8 +22,12 @@ driver.find_element_by_xpath(path).click()
 driver.get('http://study.jnu.edu.cn/webapps/blackboard/content/'
            'listContent.jsp?course_id=_18789_1&content_id=_340261_1')
 
-path2 = '//ul/li[@class=\'clearfix read\']'
-homeworklen = len(driver.find_elements_by_xpath(path2))
+path2 = '//ul/li[@class=\'clearfix read\']//a'
+items = driver.find_elements_by_xpath(path2)
+items[0].click()
+# driver.get('http://study.jnu.edu.cn/bbcswebdav/pid-340264-dt-content-rid-964602_1/xid-964602_1')
+print(items)
+homeworklen = len(items)
 print(homeworklen)
 
 while 1:
