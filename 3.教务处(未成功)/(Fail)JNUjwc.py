@@ -48,19 +48,6 @@ def login():
     print(test.text)
     print('GET' + str(test.status_code))
 
-    data = {
-        '__EVENTTARGET': '',
-        '__EVENTARGUMENT': '',
-        '__VIEWSTATE': '/wEPDwUKLTEyOTk3ODU5Mw9kFgICAw9kFgYCAQ9kFg4CBQ8PFgIeB0VuYWJsZWRoZGQCBw8PFgIeB1Rvb2xUaXAFCeWGhe'
-                       'aLm+eUn2RkAgkPDxYEHgRUZXh0BQoyMDE1MDUzOTYxHwEFBDIwMTVkZAILDw8WAh8BBQPnp4tkZAINDw8WBB8CBQnnqIvlp'
-                       'KnpmLMfAQUY5L+h5oGv56eR5a2m5oqA5pyv5a2m6ZmiZGQCDw8PFgIfAWVkZAIRDw8WBB8CBTHkv6Hmga/np5HlrabmioDm'
-                       'nK/lrabpmaIg6K6h566X5py656eR5a2m5LiO5oqA5pyvHwEFGOiuoeeul+acuuenkeWtpuS4juaKgOacr2RkAgMPDxYCHgd'
-                       'WaXNpYmxlaGQWAgIDDzwrAA0AZAIFDw8WAh8DaGQWAgIFDzwrAA0AZBgCBQZHVlpIQ0oPZ2QFBkdWTFNDSg9nZNWB6Op6hM'
-                       'vjyFmeAEqE/p59m6Q0'
-    }
-    reqst = session.post('http://jwxt.jnu.edu.cn/Secure/Cjgl/Cjgl_Cjcx_WdCj.aspx', data=data)
-    print(reqst.status_code)
-
     reqst2 = session.get('http://jwxt.jnu.edu.cn/Secure/Cjgl/Cjgl_Cjcx_WdCj.aspx')
     print(reqst2.text)
 

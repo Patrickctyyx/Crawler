@@ -32,7 +32,7 @@ class HomeworkIndicator:
 
         self.login()
 
-        path = '//ul/li[@class=\'clearfix read\']'
+        path = '//ul/li[@class=\'clearfix read\']//a'
         i = 0
         for url, hw, name in zip(self.urls, self.hw_len, self.names):
             self.driver.get(url)
@@ -43,8 +43,11 @@ class HomeworkIndicator:
             i = 0
             for url, hw, name in zip(self.urls, self.hw_len, self.names):
                 self.driver.get(url)
-                cnt = len(self.driver.find_elements_by_xpath(path))
+                items = self.driver.find_elements_by_xpath(path)
+                cnt = len(items)
                 if cnt > hw:
+                    for offset in range(cnt - hw):
+                        items[hw + offset].click()
                     self.hw_len[i] = cnt
                     body = '【{}】作业有新内容了！'.format(name)
                     print('已发送邮件！')
@@ -58,10 +61,10 @@ if __name__ == '__main__':
 
     urls = ['http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
             'nt.jsp?course_id=_18789_1&content_id=_340261_1',
-            # 'http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
-            # 'nt.jsp?course_id=_18755_1&content_id=_192521_1',
+            'http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
+            'nt.jsp?course_id=_18789_1&content_id=_340509_1',
             'http://study.jnu.edu.cn/webapps/blackboard/content/listConte'
             'nt.jsp?course_id=_18755_1&content_id=_251306_1']
-    names = ['计组', '汇编实验']
+    names = ['计组', '计组第三章 PPT', '汇编实验']
     indicator = HomeworkIndicator(urls, names)
     indicator.start()
